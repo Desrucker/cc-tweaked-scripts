@@ -52,7 +52,7 @@ This program automates the process of mining a tunnel using a **Turtle** in Mine
 6. **Completion**:
    - Once the tunnel is complete, the turtle returns to its starting position by moving backward the same number of blocks it dug.
 
---
+---
 
 ## Key Functions
 
