@@ -66,7 +66,7 @@ end
 local function tryDig()
     while turtle.detect() do
         if turtle.dig() then
-            sleep(0.5)
+            sleep(0.3)
             filterInventory()
         else
             return false
@@ -98,7 +98,7 @@ local function moveForward()
         if turtle.detect() then
             if not tryDig() then return false end
         else
-            sleep(0.5)
+            sleep(0.3)
         end
     end
     return true
@@ -117,11 +117,11 @@ for i = 1, length do
 
     -- Place torches every 15 blocks
     if i % 15 == 0 then
-        print("Placed a torch")
         turtle.turnRight()
         placeTorchAbove()
         turtle.turnLeft()
-        sleep(0.2)
+        print("Placed a torch")
+        sleep(0.3)
     end
 end
 
