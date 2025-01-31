@@ -145,7 +145,9 @@ local function moveForward()
     refuel()
     while not turtle.forward() do
         if turtle.detect() then
-            if not tryDig() then return false end
+            if not tryDig() then 
+                return false 
+            end
         else
             sleep(0.3)
         end
