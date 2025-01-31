@@ -24,7 +24,6 @@ local keepItems = {
     ["minecraft:raw_iron"] = true,
     ["minecraft:coal"] = true,
     ["minecraft:torch"] = true
-
 }
 
 -- Function to check item names and drop unwanted items
