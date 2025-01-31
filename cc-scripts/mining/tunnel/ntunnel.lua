@@ -44,9 +44,9 @@ local function unload()
 
     sleep(0.2)
 
-    for (slot = 3, 16) do
+    for slot = 3, 16 do
         turtle.select(slot)
-        local item = turtle.getItemCount(i)
+        local item = turtle.getItemCount(slot)
         if (item and not fuelItems[item.name]) then
             turtle.drop() -- Drop item if it's not in fuelItems
         else
@@ -65,9 +65,9 @@ end
 
 -- Function to check item names and drop unwanted items
 local function filterInventory()
-    for (slot = 3, 16) do
+    for slot = 3, 16 do
         turtle.select(slot)
-        local item = turtle.getItemDetail()
+        local item = turtle.getItemDetail(slot)
         if (item and not keepItems[item.name]) then
             turtle.drop()  -- Drop unwanted items
         end
@@ -77,7 +77,6 @@ end
 
 
 local function moveForward()
-    refuel()
     while not turtle.forward() do
         if (turtle.detect()) then
             if (not tryDig()) then 
@@ -111,15 +110,25 @@ local function placeTorchAbove()
     end
 end
 
+-- Return home when done
+local function returnHome()
+    print("Returning to start...")
+    for i = 1, distance do
+        turtle.back()
+    end
+end
+
 -- Start tunneling
 print("Tunneling " .. distance .. " blocks...")
 
-for (i = 1, distance) do
+for i = 1, distance do
     -- Check if inventory is full or coal is low, and return home immediately
-    if (isInventoryFull() or isLowOnFuel()) then
-        if (returnHome()) then 
-            return 
-        end  
+    turtle.refuel()
+    local fuel = turtle.getFuelLevel()
+    if (fuel < 10) then
+        print("Low on fuel, fuel level is " .. fuel)
+        returnHome()
+        return
     end
 
     tryDig()
@@ -127,12 +136,12 @@ for (i = 1, distance) do
     turtle.digUp()
     
     -- Filter inventory every 5 blocks
-    if (i % 5 == 0) then
+    if (i % 10 == 0) then
         filterInventory()
     end
 
     -- Place torches every 15 blocks
-    if (i % 15 == 0) then
+    if (i % 13 == 0) then
         turtle.turnRight()
         sleep(0.2)
         placeTorchAbove()
@@ -141,13 +150,9 @@ for (i = 1, distance) do
     end
 end
 
--- Return home when done
-print("Returning to start...")
-for (i = 1, distance) do
-    turtle.back()
-end
 
-sleep(1)
+returnHome()
+sleep(0.5)
 unload()
 
 print("Tunnel complete!")
