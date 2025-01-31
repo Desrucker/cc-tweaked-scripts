@@ -1,6 +1,6 @@
--- Nesse Version of "Tunnel" 1.1.0
--- Usage "NTunnel <Length>
--- Ex: NTunnel 10
+-- Nesse Version of "Tunnel" 1.1.1
+-- Usage "ntunnel <Length>
+-- Ex: ntunnel 10
 
 if not turtle then
     printError("Requires a Turtle")
@@ -49,7 +49,30 @@ local function isLowOnFuel()
     return false
 end
 
--- Function to return home and deposit items (only slots 3-16)
+-- Function to unload items (only slots 3-16), keeping one stack of fuel if specified
+local function unload(_bKeepOneFuelStack)
+    print("Unloading items...")
+
+    for slot = 3, 16 do  -- Only unload slots 3-16
+        local nCount = turtle.getItemCount(slot)
+        if nCount > 0 then
+            turtle.select(slot)
+            local bDrop = true
+            if _bKeepOneFuelStack and turtle.refuel(0) then
+                bDrop = false
+                _bKeepOneFuelStack = false
+            end
+            if bDrop then
+                turtle.drop()
+            end
+        end
+    end
+
+    turtle.select(1)  -- Reset selection
+    print("Unloading complete.")
+end
+
+-- Function to return home and unload items when necessary
 local function returnHome()
     print("Returning home to deposit items or refuel...")
 
@@ -61,13 +84,8 @@ local function returnHome()
         end
     end
 
-    -- Deposit items directly behind (only slots 3-16)
-    print("Depositing items into chest behind...")
-    for slot = 3, 16 do  -- Only deposit slots 3 to 16
-        turtle.select(slot)
-        turtle.drop()  -- Drops items into the chest behind
-    end
-    turtle.select(1)  -- Reset to first slot
+    -- Deposit items directly behind, keeping one stack of fuel
+    unload(true)
 
     print("Returning home complete. Stopping.")
     return true  -- Stop execution completely
@@ -85,19 +103,7 @@ local function filterInventory()
     turtle.select(1) -- Reset selection
 end
 
--- Function to check for torches in the turtle's inventory
-local function findTorchSlot()
-    for slot = 1, 16 do
-        turtle.select(slot)
-        local item = turtle.getItemDetail()
-        if item and item.name == "minecraft:torch" then
-            return slot  -- Return the slot number if a torch is found
-        end
-    end
-    return nil  -- Return nil if no torches are found
-end
-
--- Function to place a torch above the turtle
+-- Function to place a torch above the turtle (always from slot 2)
 local function placeTorchAbove()
     turtle.select(2)  -- Always select slot 2 for torches
     if turtle.placeUp() then
@@ -106,7 +112,6 @@ local function placeTorchAbove()
         print("Failed to place torch! Check inventory.")
     end
 end
-
 
 local function tryDig()
     while turtle.detect() do
