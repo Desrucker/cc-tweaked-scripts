@@ -28,7 +28,7 @@ local keepItems = {
 
 -- Function to check if inventory is full
 local function isInventoryFull()
-    for slot = 1, 16 do
+    for slot = 3, 16 do
         if turtle.getItemCount(slot) == 0 then
             return false  -- Found an empty slot, inventory is NOT full
         end
@@ -173,7 +173,6 @@ for i = 1, length do
         turtle.turnRight()
         placeTorchAbove()
         turtle.turnLeft()
-        print("Placed a torch")
         sleep(0.3)
     end
 end
