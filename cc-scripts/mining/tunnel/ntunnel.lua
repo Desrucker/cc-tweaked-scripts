@@ -141,29 +141,13 @@ for (i = 1, distance) do
     end
 end
 
--- Function to return home and unload items when necessary
-local function returnHome()
-    print("Returning home to deposit items or refuel...")
-
-    -- Move back to the start position
-    for (i = 1, turtle.getFuelLevel()) do
-        if (not turtle.back()) then
-            turtle.dig()
-            sleep(0.3)
-        end
-    end
-
-    -- Deposit items directly behind, keeping one stack of fuel
-    unload(true)
-
-    print("Returning home complete. Stopping.")
-    return true  -- Stop execution completely
-end
-
 -- Return home when done
 print("Returning to start...")
 for (i = 1, distance) do
     turtle.back()
 end
+
+sleep(1)
+unload()
 
 print("Tunnel complete!")
