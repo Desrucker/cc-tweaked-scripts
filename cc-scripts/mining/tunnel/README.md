@@ -1,29 +1,6 @@
 # Nesse Version of "Tunnel"
 
-This program automates the process of mining a tunnel using a **Turtle** in Minecraft (via the ComputerCraft mod). The turtle digs a straight tunnel of a specified length, manages its inventory by keeping valuable items, places torches periodically, and returns to its starting position once the tunnel is complete.
-
----
-
-## Features
-
-1. **Tunnel Digging**:
-   - The turtle digs forward for a specified length, clearing blocks in front and above itself as it moves.
-   - It uses the `tryDig()` function to dig blocks and the `moveForward()` function to move forward while ensuring the path is clear.
-
-2. **Inventory Management**:
-   - The turtle keeps valuable items (e.g., redstone, diamonds, gold, iron, coal, and torches) using the `filterInventory()` function.
-   - Unwanted items are automatically dropped to free up inventory space.
-
-3. **Torch Placement**:
-   - The turtle places torches every 15 blocks to light up the tunnel using the `placeTorchAbove()` function.
-   - It searches for torches in its inventory with the `findTorchSlot()` function.
-
-4. **Fuel Management**:
-   - The turtle checks its fuel level and refuels itself if necessary using the `refuel()` function.
-   - If it runs out of fuel, it waits for the player to add more before continuing.
-
-5. **Return to Start**:
-   - After completing the tunnel, the turtle returns to its starting position by moving backward the same number of blocks it dug.
+This program automates the process of mining a tunnel using a **Turtle** in Minecraft (via the ComputerCraft mod or the fork version know as CC: Tweaked). The turtle digs a straight tunnel of a specified distance, manages its inventory by keeping valuable items, places torches periodically, and returns to its starting position once the tunnel is complete.
 
 ---
 
