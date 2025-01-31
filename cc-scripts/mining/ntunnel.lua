@@ -15,7 +15,8 @@ if #tArgs ~= 1 then
     return
 end
 
-if not length or length < 1 then
+local length = tonumber(tArgs[1])
+if length == nil or length < 1 then
     print("Usage: ntunnel <length>")
     return
 end
