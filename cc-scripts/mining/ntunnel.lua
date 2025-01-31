@@ -1,4 +1,4 @@
--- Nesse Version of "Tunnel" 1.1.1
+-- Nesse Version of "Tunnel" 1.1.2
 -- Usage "ntunnel <Length>
 -- Ex: ntunnel 10
 
@@ -56,23 +56,18 @@ local function isLowOnFuel()
 end
 
 -- Function to unload items (only slots 3-16), keeping one stack of fuel if specified
-local function unload(_bKeepOneFuelStack)
-    print("Unloading items...")
-
-    for slot = 3, 16 do  -- Only unload slots 3-16
-        local nCount = turtle.getItemCount(slot)
-        if nCount > 0 then
-            turtle.select(slot)
-            local bDrop = true
-            if _bKeepOneFuelStack and turtle.refuel(0) then
-                bDrop = false
-                _bKeepOneFuelStack = false
-            end
-            if bDrop then
-                turtle.drop()
-            end
-        end
-    end
+local function unload()
+    turnLeft()
+    turnLeft()
+    local n = 3
+    repeat 
+        local slot = turtle.getItemCount(n)
+        turtle.select(n)
+        turtle.drop()
+        n = n + 1
+    until (n > 16)
+    turtle.turnRight()
+    turtle.turnRight()
 
     turtle.select(1)  -- Reset selection
     print("Unloading complete.")
