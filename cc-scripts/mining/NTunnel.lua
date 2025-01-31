@@ -1,4 +1,4 @@
--- Nesse Version of "Tunnel" 1.0.0
+-- Nesse Version of "Tunnel" 1.1.0
 -- Usage "NTunnel <Length>
 -- Ex: NTunnel 10
 
@@ -26,6 +26,53 @@ local keepItems = {
     ["minecraft:torch"] = true
 }
 
+-- Function to check if inventory is full
+local function isInventoryFull()
+    for slot = 1, 16 do
+        if turtle.getItemCount(slot) == 0 then
+            return false  -- Found an empty slot, inventory is NOT full
+        end
+    end
+    return true  -- No empty slots left, inventory IS full
+end
+
+-- Function to check if coal in slot 1 is ≤ 5 and cannot refuel
+local function isLowOnFuel()
+    if turtle.getFuelLevel() == "unlimited" then
+        return false
+    end
+    turtle.select(1)
+    local item = turtle.getItemDetail()
+    if item and item.name == "minecraft:coal" and item.count <= 5 then
+        return not turtle.refuel(1)  -- True if it can't refuel
+    end
+    return false
+end
+
+-- Function to return home and deposit items (only slots 3-16)
+local function returnHome()
+    print("Returning home to deposit items or refuel...")
+
+    -- Move back to the start position
+    for i = 1, turtle.getFuelLevel() do
+        if not turtle.back() then
+            turtle.dig()
+            sleep(0.3)
+        end
+    end
+
+    -- Deposit items directly behind (only slots 3-16)
+    print("Depositing items into chest behind...")
+    for slot = 3, 16 do  -- Only deposit slots 3 to 16
+        turtle.select(slot)
+        turtle.drop()  -- Drops items into the chest behind
+    end
+    turtle.select(1)  -- Reset to first slot
+
+    print("Returning home complete. Stopping.")
+    return true  -- Stop execution completely
+end
+
 -- Function to check item names and drop unwanted items
 local function filterInventory()
     for slot = 1, 16 do
@@ -52,21 +99,19 @@ end
 
 -- Function to place a torch above the turtle
 local function placeTorchAbove()
-    local torchSlot = findTorchSlot()  -- Get the slot with a torch
-    if torchSlot then
-        turtle.select(torchSlot)  -- Select the slot with the torch
-        turtle.placeUp()  -- Place the torch above the turtle
+    turtle.select(2)  -- Always select slot 2 for torches
+    if turtle.placeUp() then
         print("Placed a torch")
     else
-        print("No torches found in inventory.")
+        print("Failed to place torch! Check inventory.")
     end
 end
+
 
 local function tryDig()
     while turtle.detect() do
         if turtle.dig() then
             sleep(0.3)
-            filterInventory()
         else
             return false
         end
@@ -107,11 +152,20 @@ end
 print("Tunneling " .. length .. " blocks...")
 
 for i = 1, length do
+    -- Check if inventory is full or coal is low, and return home immediately
+    if isInventoryFull() or isLowOnFuel() then
+        if returnHome() then 
+            return 
+        end  
+    end
+
     tryDig()
     moveForward()
     turtle.digUp()
+    
+    -- Filter inventory every 5 blocks
     if i % 5 == 0 then
-        filterInventory()  -- Ensure inventory stays clean
+        filterInventory()
     end
 
     -- Place torches every 15 blocks
@@ -124,7 +178,7 @@ for i = 1, length do
     end
 end
 
--- Return home
+-- Return home when done
 print("Returning to start...")
 for i = 1, length do
     turtle.back()
