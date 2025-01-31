@@ -20,8 +20,8 @@ end
 local keepItems = {
     ["minecraft:redstone"] = true,
     ["minecraft:diamond"] = true,
-    ["minecraft:gold_ingot"] = true,
-    ["minecraft:iron_ingot"] = true,
+    ["minecraft:raw_gold"] = true,
+    ["minecraft:raw_iron"] = true,
     ["minecraft:coal"] = true,
     ["minecraft:torch"] = true
 
