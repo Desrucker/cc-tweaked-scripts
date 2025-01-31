@@ -1,4 +1,4 @@
--- Nesse Version of "Tunnel"
+-- Nesse Version of "Tunnel" 1.0.0
 -- Usage "NTunnel <Length>
 -- Ex: NTunnel 10
 
@@ -111,12 +111,17 @@ for i = 1, length do
     tryDig()
     moveForward()
     turtle.digUp()
-    filterInventory()  -- Ensure inventory stays clean
+    if i % 5 == 0 then
+        filterInventory()  -- Ensure inventory stays clean
+    end
 
     -- Place torches every 15 blocks
     if i % 15 == 0 then
-        print("Placing torch at block " .. i)
+        print("Placed a torch")
+        turtle.turnRight()
         placeTorchAbove()
+        turtle.turnLeft()
+        sleep(0.2)
     end
 end
 
