@@ -9,10 +9,14 @@ end
 
 -- Get tunnel length from command-line arguments
 local tArgs = { ... }
-local length = tonumber(tArgs[1])
+if #tArgs ~= 1 then
+    local programName = arg[0] or fs.getName(shell.getRunningProgram())
+    print("Usage: " .. programName .. " <length>")
+    return
+end
 
 if not length or length < 1 then
-    print("Usage: NTunnel <length>")
+    print("Usage: ntunnel <length>")
     return
 end
 
@@ -23,7 +27,8 @@ local keepItems = {
     ["minecraft:raw_gold"] = true,
     ["minecraft:raw_iron"] = true,
     ["minecraft:coal"] = true,
-    ["minecraft:torch"] = true
+    ["minecraft:torch"] = true,
+    ["minecraft:raw_copper"] = true
 }
 
 -- Function to check if inventory is full
