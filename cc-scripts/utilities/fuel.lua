@@ -1,0 +1,1 @@
+print(string.format("Your fuel level is %s", turtle.getFuelLevel()))
