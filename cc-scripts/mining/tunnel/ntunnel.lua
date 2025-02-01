@@ -10,7 +10,7 @@ end
 
 -- Get tunnel distance and initial direction from command-line arguments
 local tArgs = { ... }
-if (#tArgs ~= 2) then
+if (#tArgs ~= 1) then
     local programName = arg[0] or fs.getName(shell.getRunningProgram())
     print("Usage: " .. programName .. " <distance>")
     return
@@ -23,8 +23,9 @@ if (distance == nil or distance < 1) then
 end
 
 -- List of items for fuel
-local fuelItems = {
-    ["minecraft:coal"] = true
+local allowItems = {
+    ["minecraft:coal"] = true,
+    ["minecraft:torch"] = true
 }
 
 -- List of items to keep
@@ -49,10 +50,10 @@ local function unload()
     turtle.turnLeft()
     sleep(0.2)
 
-    for slot = 3, 16 do
+    for slot = 1, 16 do
         turtle.select(slot)
         local item = turtle.getItemDetail()
-        if (item and not fuelItems[item.name]) then
+        if (item and not allowItems[item.name]) then
             turtle.drop()
         end
     end
@@ -65,7 +66,7 @@ end
 
 -- Function to check item names and drop unwanted items
 local function filterInventory()
-    for slot = 3, 16 do
+    for slot = 1, 16 do
         turtle.select(slot)
         local item = turtle.getItemDetail()
         if (item and not keepItems[item.name]) then
